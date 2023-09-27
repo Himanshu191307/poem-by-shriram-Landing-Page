@@ -1,0 +1,84 @@
+<?php
+    ob_start(); 
+    session_start();
+ include('config.php');  
+   if(isset($_POST['submit'])) {
+	$email_to = "sachin@januskoncepts.in, mukesh@januskoncepts.com, sonam@januskoncepts.net"; // Enter Admin Email Id     
+	$namee = $_POST['name']; 
+	$email = $_POST['email']; 
+	$phone = $_POST['phone']; 
+	$camp_name = $_POST['sources'];
+		
+	$utm_url = $_POST['utm_url']; 
+	$utm_mediums1 = $_POST['utm_medium']; 
+	$utm_campaign1 = $_POST['utm_campaign'];  	
+	$email_subject = "Enquiry From '".$camp_name."'";    
+   date_default_timezone_set('Asia/Kolkata');
+   $date=date('Y-m-d'); 
+   $currentDateTime=date('m/d/Y H:i:s'); 
+   $newDateTime = date('h:i A', strtotime($currentDateTime));
+ 
+	
+			
+		 $insertIntoTable = "insert into tbl_form2 SET 	                          
+	                                                      							   
+					name		     =	'".$namee."', 
+					email		     =	'".$email."',
+					phone		     =	'".$phone."',
+					camp_name		 =	'".$camp_name."',					
+					time		            =   '".$newDateTime."',							  
+					status		            =	'1',							   
+					date                    = '".$date."'";	
+			$resultIntoTable =  mysqli_query($cons, $insertIntoTable);
+			
+			
+		
+   $error_message = "";
+   $email_message .= "
+   <html>
+   <head>
+       <title>HTML email</title>
+     </head>
+     <body>    
+         <table style='background-color :#f1f2f1; padding: 5px 5px 5px 5px;'>
+           <tr>";
+            $email_message .= "<td>Name:</td>";
+            $email_message .= "<td>".$namee."</td>\n";
+            $email_message .= "</tr>
+              <td>Email:</td>";
+              $email_message .= "<td>".$email."</td>\n";
+              $email_message .= "</tr>          
+              <tr>
+             <td>Phone:</td>";
+              $email_message .= "<td>".$phone."</td>\n";
+              $email_message .= "</tr>          
+              <tr>
+			  
+			   <tr>
+   		    <td>Campaign Name:</td>";
+              $email_message .= "<td>".$camp_name."</td>\n";
+              $email_message .= "</tr>
+         </table>
+       </body>
+   </html>
+   ";
+   // create email headers
+   $email="info@janusalive.com";
+   $headers = 'From: '.$name."\r\n".
+   'Reply-To: '.$name."\r\n" .
+   'X-Mailer: PHP/' . phpversion();
+   $headers = "MIME-Version: 1.0" . "\r\n";
+   $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+   $checkmail=@mail($email_to, $email_subject, $email_message, $headers); 
+    if( $checkmail == true )  
+      {?>
+<script>
+   window.location = 'thank-you.php';
+</script>
+<?php }
+   else
+   {
+      echo "Mail could not be sent...";
+   }
+   }
+   ?>
